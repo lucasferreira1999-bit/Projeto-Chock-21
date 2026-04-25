@@ -30,6 +30,25 @@ export default function SalesPage({ answers, leadData }: SalesPageProps) {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const handleCheckout = () => {
+    const baseUrl = 'https://pay.kirvano.com/8ecd57f3-b6ba-4183-a8c4-bda7593c8ff3';
+    
+    if (!leadData) {
+      window.location.href = baseUrl;
+      return;
+    }
+
+    const params = new URLSearchParams({
+      name: leadData.fullName,
+      email: leadData.email,
+      phone: leadData.whatsapp,
+      document: leadData.cpf
+    });
+
+    const finalUrl = `${baseUrl}?${params.toString()}`;
+    window.location.assign(finalUrl);
+  };
+
   return (
     <div className="bg-bg-deep min-h-screen pt-20 pb-12 overflow-hidden">
       {/* Background Glow Decoration */}
@@ -107,7 +126,10 @@ export default function SalesPage({ answers, leadData }: SalesPageProps) {
                 ))}
               </div>
 
-              <button className="w-full mt-10 bg-gold text-black font-bold uppercase tracking-widest text-sm py-5 hover:bg-white transition-colors duration-500">
+              <button 
+                onClick={handleCheckout}
+                className="w-full mt-10 bg-gold text-black font-bold uppercase tracking-widest text-sm py-5 hover:bg-white transition-colors duration-500"
+              >
                 {offer.cta}
               </button>
 
@@ -152,16 +174,33 @@ export default function SalesPage({ answers, leadData }: SalesPageProps) {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: "Marcos S.", text: "O plano de 21 dias foi exatamente o que eu precisava para sair da inércia. Perdi 4kg e recuperei o fôlego." },
-              { name: "Juliana R.", text: "Finalmente uma rotina que cabe no meu dia corrido. A autoestima voltou e as roupas estão vestindo melhor." },
-              { name: "Ricardo F.", text: "O checklist diário é o segredo. Não preciso pensar, é só seguir e ver o resultado acontecer." }
+              { 
+                name: "Marcos S.", 
+                text: "O plano de 21 dias foi exatamente o que eu precisava para sair da inércia. Perdi 4kg e recuperei o fôlego.",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200"
+              },
+              { 
+                name: "Juliana R.", 
+                text: "Finalmente uma rotina que cabe no meu dia corrido. A autoestima voltou e as roupas estão vestindo melhor.",
+                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200&h=200"
+              },
+              { 
+                name: "Ricardo F.", 
+                text: "O checklist diário é o segredo. Não preciso pensar, é só seguir e ver o resultado acontecer.",
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200&h=200"
+              }
             ].map((t, i) => (
               <div key={i} className="bg-bg-card p-10 border border-border-bold relative group hover:border-gold/30 transition-colors">
-                <div className="flex gap-1 mb-6">
-                  {[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 text-gold fill-gold" />)}
+                <div className="flex items-center gap-4 mb-6">
+                  <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full grayscale group-hover:grayscale-0 transition-all border border-border-bold" referrerPolicy="no-referrer" />
+                  <div>
+                    <div className="text-xs uppercase tracking-widest font-bold text-white">{t.name}</div>
+                    <div className="flex gap-1 mt-1">
+                      {[1,2,3,4,5].map(s => <Star key={s} className="w-2 h-2 text-gold fill-gold" />)}
+                    </div>
+                  </div>
                 </div>
-                <p className="text-gray-400 font-light italic mb-8 leading-relaxed">"{t.text}"</p>
-                <div className="text-xs uppercase tracking-widest font-bold text-white">{t.name}</div>
+                <p className="text-gray-400 font-light italic leading-relaxed text-sm">"{t.text}"</p>
               </div>
             ))}
           </div>
@@ -198,7 +237,7 @@ export default function SalesPage({ answers, leadData }: SalesPageProps) {
             Pronto para <span className="italic font-bold">o seu novo ciclo?</span>
           </h2>
           <button 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={handleCheckout}
             className="px-12 py-6 bg-bg-deep text-gold font-bold uppercase tracking-[0.3em] text-xs hover:bg-white hover:text-black transition-all shadow-2xl"
           >
             Quero começar agora
